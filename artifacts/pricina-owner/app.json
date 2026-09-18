@@ -1,22 +1,25 @@
 {
   "expo": {
-    "name": "PRICINA Owner",
-    "slug": "pricina-owner",
+    "name": "PRICINA",
+    "slug": "pricina",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/pricina-mark.png",
-    "scheme": "pricina-owner",
+    "scheme": "pricina",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.pricina.app"
     },
     "android": {
-      "package": "com.pricina.owner"
+      "package": "com.pricina.app"
     },
     "web": {
       "favicon": "./assets/images/icon.png"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
