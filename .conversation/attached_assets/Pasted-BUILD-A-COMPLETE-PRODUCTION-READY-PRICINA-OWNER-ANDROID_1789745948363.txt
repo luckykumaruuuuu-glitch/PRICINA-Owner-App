@@ -1,0 +1,1856 @@
+BUILD A COMPLETE PRODUCTION-READY PRICINA OWNER ANDROID APP
+
+IMPORTANT:
+Create the complete PRICINA Owner Android application in ONE implementation.
+
+This is NOT a demo.
+This is NOT a prototype.
+This is NOT a static UI mockup.
+
+Build a professional, production-oriented Android owner app connected to the EXISTING PRICINA Firebase project and EXISTING Cloud Firestore database.
+
+The PRICINA CUSTOMER WEBSITE IS ALREADY WORKING.
+
+Customer website submissions are already successfully being stored in:
+
+Cloud Firestore
+Collection:
+leads
+
+DO NOT modify, replace, recreate, or delete the existing website system.
+
+The purpose of this Android application is to let the PRICINA owner securely view and manage incoming customer inquiries/leads in real time.
+
+==================================================
+1. PRODUCT NAME
+==================================================
+
+App name:
+
+PRICINA
+
+Internal purpose:
+
+PRICINA Owner / Lead Management App
+
+This is a PRIVATE OWNER APP.
+
+It is NOT a customer application.
+
+Customers must never get access to this application or owner dashboard.
+
+==================================================
+2. EXISTING FIREBASE PROJECT
+==================================================
+
+Use the EXISTING Firebase project.
+
+Firebase project ID:
+
+pricina-a47fa
+
+Existing Web Firebase configuration:
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAS8WqifljJ2W0f7wS_if53mUgzDZIg4M",
+  authDomain: "pricina-a47fa.firebaseapp.com",
+  projectId: "pricina-a47fa",
+  storageBucket: "pricina-a47fa.firebasestorage.app",
+  messagingSenderId: "730344359595",
+  appId: "1:730344359595:web:80560ed2c8ed75c72d19ee",
+  measurementId: "G-71MYKFYM55"
+};
+
+IMPORTANT:
+
+This configuration identifies the existing Firebase project.
+
+For the Android application, use the proper Android Firebase integration.
+
+If this development environment requires an Android Firebase app registration and google-services.json:
+
+- Register the Android app under the EXISTING Firebase project.
+- Use the package/application ID created for this PRICINA Owner app.
+- Download/use the real google-services.json.
+- Do NOT fabricate google-services.json.
+- Do NOT create another Firebase project.
+- Do NOT create another Firestore database.
+
+If Firebase Android registration cannot be completed automatically by the development environment, clearly indicate the exact one-time Firebase Console step required instead of generating fake credentials.
+
+==================================================
+3. DATABASE
+==================================================
+
+Use:
+
+Cloud Firestore
+
+Existing database:
+
+(default)
+
+Existing collection:
+
+leads
+
+DO NOT use Firebase Realtime Database.
+
+DO NOT create a second database.
+
+DO NOT create a second leads collection.
+
+==================================================
+4. EXISTING LEAD DOCUMENT STRUCTURE
+==================================================
+
+The website currently creates lead documents containing fields such as:
+
+name
+phone
+email
+businessName
+businessType
+selectedPlan
+services
+message
+createdAt
+status
+clientType
+
+The Android app must safely handle these fields.
+
+Expected examples:
+
+name:
+Vas
+
+phone:
+9876543210
+
+email:
+username@gmail.com
+
+businessName:
+Example Business
+
+businessType:
+Gym / Salon / Restaurant / etc.
+
+selectedPlan:
+Basic / Medium / Premium
+
+services:
+array/list of selected services
+
+message:
+Customer's requirements
+
+createdAt:
+Firestore Timestamp
+
+status:
+new
+
+clientType:
+new / existing
+
+IMPORTANT:
+
+Do not assume fields are always present.
+
+If an older Firestore document is missing a field, the app must not crash.
+
+Display:
+
+"Not provided"
+
+where appropriate.
+
+==================================================
+5. AUTHENTICATION
+==================================================
+
+This is an OWNER-ONLY application.
+
+Implement Firebase Authentication.
+
+Preferred authentication:
+
+Email + Password
+
+Create a professional login screen.
+
+Login screen:
+
+PRICINA logo
+PRICINA
+Owner Portal
+
+Email input
+Password input
+Show/hide password
+Login button
+Loading state
+Error state
+
+Do NOT provide public signup inside the app.
+
+Do NOT allow random users to create owner accounts.
+
+Owner accounts must be created/managed securely through Firebase Authentication.
+
+After successful login:
+
+Open Owner Dashboard.
+
+Persist authenticated session securely so the owner does not have to login every time.
+
+Provide Logout inside Settings/Profile.
+
+==================================================
+6. OWNER SECURITY
+==================================================
+
+Security is extremely important.
+
+The app must never expose all leads to unauthenticated users.
+
+Only authenticated/authorized owner accounts should be able to read lead documents.
+
+Do not put owner credentials or passwords inside source code.
+
+Do not hard-code a Firebase password.
+
+Do not create a fake authentication system.
+
+Use Firebase Authentication.
+
+Use Firestore Security Rules compatible with authenticated owner access.
+
+Customer website:
+- create leads only
+
+Owner app:
+- authenticated read
+- authenticated management/update where needed
+
+Public users:
+- cannot read leads
+- cannot update leads
+- cannot delete leads
+
+IMPORTANT:
+
+There must be NO delete feature in the owner app.
+
+Do not add:
+Delete
+Delete all
+Swipe to delete
+Bulk delete
+
+Lead history must remain permanently available.
+
+==================================================
+7. MAIN APP STRUCTURE
+==================================================
+
+Create a modern Android application with bottom navigation.
+
+Main navigation:
+
+1. Dashboard
+2. New Leads
+3. Clients
+4. Notifications
+5. Profile / Settings
+
+Use modern Android UI/UX principles.
+
+Prefer:
+
+Jetpack Compose
+Material 3
+Modern Android architecture
+MVVM / clean separation of UI and data
+Repository pattern where appropriate
+Firebase Authentication
+Cloud Firestore
+Firebase Cloud Messaging for push notifications
+
+Use smooth animations and transitions.
+
+==================================================
+8. DESIGN LANGUAGE
+==================================================
+
+The app should feel like a premium agency management product.
+
+PRICINA visual identity:
+
+Dark cinematic interface.
+
+Use a sophisticated dark background.
+
+Use the existing PRICINA visual identity as inspiration:
+
+- deep dark background
+- blue/cyan glow
+- subtle purple/pink accent where appropriate
+- glassmorphism-style cards used carefully
+- soft gradients
+- thin borders
+- subtle shadows
+- premium typography
+- clean spacing
+- modern rounded cards
+- minimal visual clutter
+
+Do NOT make it look like a generic admin dashboard.
+
+Do NOT overuse neon effects.
+
+The UI must remain highly readable.
+
+Use animation to improve usability, not to make the application slow.
+
+==================================================
+9. SPLASH SCREEN
+==================================================
+
+Create an elegant PRICINA splash screen.
+
+Display:
+
+PRICINA
+
+Subtle animated logo/glow.
+
+Smooth transition into:
+
+Login
+or
+Dashboard if the owner session is already authenticated.
+
+Do not keep the splash screen unnecessarily long.
+
+==================================================
+10. LOGIN SCREEN
+==================================================
+
+Create a premium login interface.
+
+Elements:
+
+PRICINA logo
+"Owner Portal"
+
+Email
+Password
+
+Login button
+
+Forgot password option if Firebase password reset is implemented.
+
+Use:
+
+- input validation
+- loading animation
+- error animation
+- keyboard-friendly layout
+- proper Android back behavior
+
+Error examples:
+
+"Invalid email or password."
+
+"Unable to sign in. Please try again."
+
+Do not expose raw Firebase error messages to users.
+
+==================================================
+11. DASHBOARD
+==================================================
+
+Dashboard must immediately show the business owner useful information.
+
+Top:
+
+Good morning / Good afternoon / Good evening
+
+PRICINA
+
+"Lead Overview"
+
+Statistics cards:
+
+New Leads
+Total Leads
+Existing Clients
+Today's Leads
+
+These should come from Firestore data.
+
+Do not use fake numbers.
+
+If there are no leads:
+
+"You're all caught up."
+
+==================================================
+12. REAL-TIME LEAD UPDATES
+==================================================
+
+This is extremely important.
+
+Use Firestore real-time listeners.
+
+When a customer submits an inquiry from the website:
+
+The Owner Android App should automatically detect the new Firestore document.
+
+NO manual refresh should be required.
+
+The dashboard/new lead list should update automatically.
+
+Use efficient listeners.
+
+Do not continuously query Firestore unnecessarily.
+
+Remove listeners appropriately when screens are disposed.
+
+==================================================
+13. NEW LEADS SECTION
+==================================================
+
+Create a dedicated:
+
+NEW LEADS
+
+screen.
+
+Show newest inquiries first.
+
+Use createdAt descending order.
+
+Each lead card should display:
+
+Customer name
+Business name
+Selected plan
+Short requirement preview
+Date/time
+New badge
+
+Example:
+
+Vas
+PRICINA Studio
+
+Premium
+
+"Looking for social media management..."
+
+18 Sep 2026
+12:58 PM
+
+NEW
+
+Use subtle entry animation when a new lead arrives.
+
+==================================================
+14. NEW LEAD ANIMATION
+==================================================
+
+When a new lead arrives:
+
+Do NOT aggressively flash the screen.
+
+Instead:
+
+- subtle card slide/fade animation
+- small "NEW" badge animation
+- optional soft highlight
+- notification trigger
+
+Make the interaction feel premium.
+
+==================================================
+15. OLD / EXISTING CLIENTS
+==================================================
+
+Create a separate client/history area.
+
+The owner should be able to distinguish:
+
+NEW
+
+and
+
+OLD / EXISTING
+
+customers.
+
+Do not delete previous records.
+
+Create filters/tabs such as:
+
+All
+New
+Existing
+Contacted
+Follow-up
+
+Only show statuses that actually exist.
+
+If a customer submits again and the system identifies the same customer, show the relationship/history appropriately.
+
+==================================================
+16. CLIENT IDENTIFICATION
+==================================================
+
+Do NOT rely on the customer website sending a trusted "new/existing" value.
+
+The backend/database architecture should treat phone number as the primary practical customer matching identifier where appropriate.
+
+Normalize phone numbers before comparison.
+
+If the same phone number has previous lead records:
+
+The owner interface should show:
+
+Existing Client
+
+and provide access to previous inquiry history.
+
+Do NOT merge or delete historical submissions.
+
+Each inquiry remains a separate historical record.
+
+==================================================
+17. CLIENT CARD
+==================================================
+
+Each customer card should be clean and information-rich.
+
+Display:
+
+Name
+Business Name
+Business Type
+Plan
+Date
+Status
+New / Existing badge
+
+Actions:
+
+Call
+Open Details
+
+Do not put too much information on the card.
+
+==================================================
+18. CLICKING CUSTOMER NAME / PROFILE
+==================================================
+
+When the owner clicks/taps the customer name or profile card:
+
+Open a complete:
+
+CLIENT PROFILE / INQUIRY DETAILS
+
+screen.
+
+Use a smooth shared-element-style transition or equivalent modern transition.
+
+Profile header:
+
+Customer Name
+Business Name
+New / Existing status
+
+Action buttons:
+
+CALL
+MESSAGE / CONTACT
+
+==================================================
+19. FULL CLIENT DETAILS SCREEN
+==================================================
+
+The details screen must show ALL available information.
+
+Sections:
+
+CUSTOMER
+
+Name
+Phone
+Email
+
+BUSINESS
+
+Business Name
+Business Type
+
+PLAN
+
+Selected Plan
+
+SERVICES
+
+All selected services
+
+MESSAGE / REQUIREMENTS
+
+Full customer message
+
+SUBMISSION
+
+Date
+Time
+
+STATUS
+
+Current lead status
+
+CLIENT TYPE
+
+New / Existing
+
+Do not truncate the full message unnecessarily.
+
+Allow scrolling.
+
+Use clean section cards.
+
+==================================================
+20. PHONE NUMBER INTERACTION
+==================================================
+
+This is very important.
+
+Display the complete phone number.
+
+Example:
+
++91 9876543210
+
+or the appropriate normalized display format.
+
+Place a clear CALL button next to/near the phone number.
+
+When the owner taps the phone number or CALL button:
+
+Open the Android system phone dialer with the number pre-filled.
+
+Use the proper Android ACTION_DIAL intent.
+
+DO NOT silently place a phone call.
+
+The owner must be able to review and manually press Call in the system dialer.
+
+Example:
+
+9876543210
+
+→ tap
+
+→ Android Phone Dialer opens with:
+
+9876543210
+
+ready to call.
+
+If the device cannot handle phone calls, show a friendly message.
+
+==================================================
+21. MESSAGE / CONTACT BUTTON
+==================================================
+
+Provide a CONTACT / MESSAGE action where appropriate.
+
+If SMS is used:
+
+Open the Android messaging application with the customer's number.
+
+Do not automatically send messages.
+
+The owner must confirm/send manually.
+
+If WhatsApp integration is implemented, open WhatsApp with the correct customer number only when WhatsApp is installed.
+
+Do not send messages automatically.
+
+==================================================
+22. EMAIL INTERACTION
+==================================================
+
+When the owner taps the email address:
+
+Open the Android email application using ACTION_SENDTO where possible.
+
+Pre-fill:
+
+To:
+customer@gmail.com
+
+Do not automatically send.
+
+==================================================
+23. LEAD STATUS
+==================================================
+
+The owner should be able to update the lead status.
+
+Possible statuses:
+
+New
+Contacted
+Follow-up
+Converted
+Closed
+
+Do not add delete.
+
+When status changes, update Firestore.
+
+Show a confirmation/toast:
+
+"Status updated"
+
+Use optimistic UI carefully and revert if the Firestore update fails.
+
+==================================================
+24. NEW MESSAGE / OLD MESSAGE EXPERIENCE
+==================================================
+
+The application should clearly separate new incoming inquiries from older inquiries.
+
+New incoming inquiries:
+
+NEW
+
+Older previously viewed/contacted inquiries:
+
+OLD / EXISTING
+
+Do not remove historical records.
+
+Use tabs/filter controls.
+
+Example:
+
+ALL | NEW | CONTACTED | FOLLOW-UP
+
+Keep the UI clean and easy to understand.
+
+==================================================
+25. NOTIFICATIONS
+==================================================
+
+Implement professional Android push notifications using Firebase Cloud Messaging.
+
+When a new customer inquiry is received:
+
+Send a push notification to the authenticated owner's registered device.
+
+Notification should NOT expose the customer's complete sensitive information.
+
+Show limited information.
+
+Example:
+
+Title:
+
+"New PRICINA Inquiry"
+
+Body:
+
+"Vas • New inquiry received"
+
+or:
+
+"New inquiry from Vas"
+
+Do NOT show the complete phone number in the notification.
+
+Do NOT show the complete email address.
+
+Do NOT show the full customer message.
+
+==================================================
+26. NOTIFICATION CLICK
+==================================================
+
+Notification must be clickable.
+
+When the owner taps the notification:
+
+Open the PRICINA app.
+
+Navigate directly to the corresponding lead's detail screen.
+
+The correct Firestore document ID should be included in the notification data payload.
+
+Do not simply open the dashboard.
+
+Open the exact lead.
+
+If the lead no longer exists or cannot be accessed:
+
+Open the notification screen and show:
+
+"This inquiry is no longer available."
+
+Do not crash.
+
+==================================================
+27. NOTIFICATION CENTER
+==================================================
+
+Create an in-app Notifications screen.
+
+Display notifications such as:
+
+New inquiry from Vas
+New inquiry from Rahul
+Lead status updated
+Follow-up reminder if implemented later
+
+Each notification card should show:
+
+Short name
+Short event
+Date/time
+Read/unread state
+
+Do NOT display the complete phone number in notification previews.
+
+Do NOT display complete private customer information in notification cards.
+
+When notification is clicked:
+
+Open the relevant lead.
+
+==================================================
+28. UNREAD NOTIFICATION BADGE
+==================================================
+
+Show an unread badge on the Notifications bottom-navigation icon.
+
+Example:
+
+Notifications
+● 3
+
+When opened/read:
+
+Update read state.
+
+Do not create unnecessary Firestore writes for every UI redraw.
+
+==================================================
+29. NOTIFICATION PERMISSION
+==================================================
+
+For modern Android versions that require notification permission:
+
+Request notification permission at an appropriate time.
+
+Do not request permission immediately on the splash screen.
+
+Explain briefly:
+
+"Allow notifications to receive new PRICINA inquiry alerts."
+
+Provide graceful behavior if permission is denied.
+
+The app should continue functioning without notifications.
+
+==================================================
+30. SEARCH
+==================================================
+
+Add a professional search experience.
+
+Owner can search existing leads by:
+
+Customer name
+Phone
+Business name
+Email
+
+Search UI should be fast.
+
+Do not download an unnecessarily large database just to perform client-side search if the dataset becomes large.
+
+Design the architecture so it can scale.
+
+==================================================
+31. FILTERS
+==================================================
+
+Provide useful filters:
+
+All
+New
+Existing
+Contacted
+Follow-up
+Converted
+Closed
+
+Add date filtering if practical:
+
+Today
+This Week
+This Month
+
+Do not make the filter UI complicated.
+
+==================================================
+32. SORTING
+==================================================
+
+Default:
+
+Newest first
+
+Optional:
+
+Oldest first
+Name A-Z
+Name Z-A
+
+Keep newest inquiries easy to access.
+
+==================================================
+33. REAL-TIME DATA CONSISTENCY
+==================================================
+
+Firestore must be the source of truth.
+
+Do not make local storage the main database.
+
+Local cache may be used only for performance/offline UX.
+
+When data changes in Firestore:
+
+The UI should update accordingly.
+
+Handle:
+- network disconnect
+- reconnect
+- Firestore errors
+- permission errors
+- missing documents
+
+Gracefully.
+
+==================================================
+34. OFFLINE / NETWORK UI
+==================================================
+
+If internet connection is lost:
+
+Show a subtle banner:
+
+"No internet connection"
+
+Do not crash.
+
+When connection returns:
+
+Automatically recover.
+
+Do not create duplicate submissions or duplicate lead records from the app.
+
+==================================================
+35. PROFILE / SETTINGS
+==================================================
+
+Create a Profile / Settings screen.
+
+Display:
+
+PRICINA
+Owner Account
+
+Authenticated email
+
+Settings:
+
+Notifications
+Theme
+Security
+About
+Logout
+
+Do not expose Firebase credentials.
+
+==================================================
+36. LOGOUT
+==================================================
+
+Logout button must:
+
+- Sign out from Firebase Authentication
+- Clear secure session state where necessary
+- Return to Login screen
+
+Show confirmation if appropriate.
+
+==================================================
+37. UI/UX ANIMATIONS
+==================================================
+
+Use professional animation throughout the app.
+
+Examples:
+
+Splash fade
+Screen transitions
+Card entrance
+New lead highlight
+Button press feedback
+Bottom navigation transition
+Notification badge animation
+Profile transition
+Status change animation
+Loading skeleton
+Success confirmation
+Error feedback
+
+Animations must be:
+
+smooth
+fast
+subtle
+premium
+
+Avoid excessive bouncing.
+
+Avoid distracting animations.
+
+Maintain 60fps-quality interaction where possible.
+
+==================================================
+38. LOADING STATES
+==================================================
+
+Never show an empty blank screen while Firebase is loading.
+
+Use:
+
+Skeleton cards
+Progress indicators
+Shimmer only where appropriate
+
+Example:
+
+Loading leads...
+
+If no data:
+
+"No inquiries yet."
+
+==================================================
+39. ERROR STATES
+==================================================
+
+Create friendly error UI.
+
+Examples:
+
+"Unable to load inquiries."
+
+"Please check your internet connection."
+
+"Your session has expired. Please sign in again."
+
+Do not show raw stack traces to the owner.
+
+Developer logs may contain technical Firebase errors.
+
+==================================================
+40. EMPTY STATES
+==================================================
+
+For New Leads:
+
+"No new inquiries"
+
+"New customer inquiries will appear here automatically."
+
+For Clients:
+
+"No clients found."
+
+For Notifications:
+
+"You're all caught up."
+
+Make empty states visually premium.
+
+==================================================
+41. ACCESSIBILITY
+==================================================
+
+Make the app accessible.
+
+Ensure:
+
+- readable text
+- sufficient contrast
+- touch targets are large enough
+- screen reader labels
+- meaningful content descriptions
+- no information depends only on color
+
+==================================================
+42. RESPONSIVE ANDROID DESIGN
+==================================================
+
+Optimize for:
+
+Small Android phones
+Large Android phones
+Different screen densities
+
+Do not allow:
+
+text clipping
+overlapping buttons
+cut-off phone numbers
+horizontal overflow
+broken cards
+keyboard covering inputs
+
+==================================================
+43. ANDROID BACK BUTTON
+==================================================
+
+Implement correct Android navigation.
+
+Examples:
+
+Detail → back → list
+
+List → back → dashboard
+
+Do not unexpectedly close the application when navigating within the app.
+
+==================================================
+44. PERFORMANCE
+==================================================
+
+Optimize Firestore usage.
+
+Do not create unnecessary listeners.
+
+Use pagination / lazy loading for large lead lists.
+
+Do not load every historical document at once if the dataset becomes large.
+
+Use efficient queries and indexes when needed.
+
+Avoid unnecessary recompositions.
+
+Avoid memory leaks.
+
+==================================================
+45. FIRESTORE DATA MODEL
+==================================================
+
+Primary collection:
+
+leads
+
+Document:
+
+{
+  name,
+  phone,
+  email,
+  businessName,
+  businessType,
+  selectedPlan,
+  services,
+  message,
+  createdAt,
+  status,
+  clientType
+}
+
+The Android app may additionally use fields such as:
+
+lastViewedAt
+updatedAt
+notificationRead
+
+ONLY if required and compatible with the existing system.
+
+Do not overwrite unknown fields.
+
+Do not destroy existing customer data.
+
+==================================================
+46. NO DELETE POLICY
+==================================================
+
+This is a permanent requirement.
+
+The owner app must NOT contain:
+
+Delete lead
+Delete client
+Delete history
+Delete all
+Bulk delete
+
+Historical customer information must remain available.
+
+==================================================
+47. AUDIT-FRIENDLY BEHAVIOR
+==================================================
+
+Where practical, preserve:
+
+createdAt
+
+and do not overwrite it.
+
+If status changes:
+
+use updatedAt
+
+Do not modify the original submission timestamp.
+
+==================================================
+48. FIRESTORE SECURITY RULE COMPATIBILITY
+==================================================
+
+The existing customer website needs create access to:
+
+leads
+
+The future Owner Android App needs authenticated access.
+
+Design the app so Security Rules can distinguish authenticated owner users.
+
+Recommended conceptual structure:
+
+allow customer create only under controlled validation.
+
+allow authenticated authorized owner read.
+
+allow authenticated authorized owner update.
+
+allow delete false.
+
+IMPORTANT:
+
+Do not make the app depend on:
+
+allow read, write: if true;
+
+Do not create insecure rules.
+
+Do not bypass Firebase Security Rules.
+
+==================================================
+49. OWNER AUTHORIZATION
+==================================================
+
+Do not assume that every authenticated Firebase user is automatically an owner.
+
+Prefer an authorization mechanism such as:
+
+custom claims
+or
+a controlled owner profile/document
+
+For example:
+
+users/{uid}
+
+with:
+
+role: "owner"
+
+The exact mechanism should be implemented securely.
+
+Do not let the public website assign itself owner privileges.
+
+Do not let users choose:
+
+role = owner
+
+from a public form.
+
+==================================================
+50. NOTIFICATION ARCHITECTURE
+==================================================
+
+Use Firebase Cloud Messaging.
+
+Important:
+
+FCM notifications for a new Firestore document should be triggered securely.
+
+Do NOT put a server/admin credential inside the Android application.
+
+If a server-side Cloud Function is required to send push notifications:
+
+create the appropriate Firebase Cloud Function architecture.
+
+Use secure server-side credentials.
+
+The Android app only receives the FCM notification/token.
+
+Never expose Firebase Admin SDK credentials in Android source code.
+
+==================================================
+51. NEW LEAD NOTIFICATION FLOW
+==================================================
+
+Desired final flow:
+
+CUSTOMER WEBSITE
+
+Customer fills inquiry form
+
+↓
+
+Submit Inquiry
+
+↓
+
+Cloud Firestore
+
+leads/{leadId}
+
+↓
+
+Secure server-side new-lead detection
+
+↓
+
+Firebase Cloud Messaging
+
+↓
+
+PRICINA Owner Android App
+
+↓
+
+Android notification
+
+"New inquiry from Vas"
+
+↓
+
+Owner taps notification
+
+↓
+
+PRICINA app opens
+
+↓
+
+Exact lead detail screen
+
+↓
+
+Owner sees:
+
+Name
+Phone
+Email
+Business
+Plan
+Services
+Message
+Date
+Time
+Status
+Client type
+
+↓
+
+Owner can tap CALL
+
+↓
+
+Android system dialer opens with customer number
+
+==================================================
+52. DO NOT SEND COMPLETE CUSTOMER DATA IN PUSH NOTIFICATION
+==================================================
+
+Notification payload should contain only the minimum information necessary.
+
+Example:
+
+title:
+New PRICINA Inquiry
+
+body:
+Vas • New inquiry received
+
+data:
+leadId = Firestore document ID
+
+Do not include:
+
+full phone
+full email
+full message
+
+in the notification payload unless absolutely required.
+
+==================================================
+53. DATE AND TIME
+==================================================
+
+Firestore createdAt is the official submission timestamp.
+
+Display:
+
+18 Sep 2026
+12:58 PM
+
+using the Firestore Timestamp.
+
+Do NOT use the owner's device current time as the original submission time.
+
+Respect the user's local timezone for display.
+
+==================================================
+54. PROFILE HISTORY
+==================================================
+
+If multiple inquiries exist for the same phone number:
+
+Inside the client profile, provide:
+
+Inquiry History
+
+Example:
+
+Inquiry #1
+18 Sep 2026
+Premium
+Social Media Management
+
+Inquiry #2
+25 Sep 2026
+Medium
+Instagram Management
+
+Do not merge these into one record.
+
+Do not delete old records.
+
+The owner should be able to understand the customer's complete history.
+
+==================================================
+55. PROFESSIONAL DASHBOARD INFORMATION HIERARCHY
+==================================================
+
+Prioritize:
+
+1. New inquiries
+2. Follow-ups
+3. Existing clients
+4. Recent activity
+5. Statistics
+
+Do not overwhelm the owner with unnecessary analytics.
+
+==================================================
+56. HOME DASHBOARD QUICK ACTIONS
+==================================================
+
+Provide quick actions:
+
+View New Leads
+View Clients
+View Notifications
+
+Optional:
+
+Today's Leads
+Follow-ups
+
+Keep the dashboard clean.
+
+==================================================
+57. SEARCH RESULT BEHAVIOR
+==================================================
+
+When a search result is tapped:
+
+Open the same full Client/Inquiry Details screen.
+
+Maintain consistent navigation.
+
+==================================================
+58. SECURITY / PRIVACY UI
+==================================================
+
+The app contains customer contact information.
+
+Do not display sensitive information unnecessarily on:
+
+- lock screen notification previews
+- recent-app thumbnails where possible
+- logs
+- analytics
+- debug output
+
+Do not log customer phone numbers or complete email addresses in production logs.
+
+==================================================
+59. CODE ORGANIZATION
+==================================================
+
+Use a professional project structure.
+
+Suggested:
+
+ui/
+screens/
+components/
+navigation/
+data/
+repository/
+model/
+auth/
+notifications/
+firebase/
+utils/
+
+Use reusable components.
+
+Keep UI separate from Firestore logic.
+
+Keep Firebase logic separate from presentation.
+
+Use clear model classes.
+
+==================================================
+60. FIREBASE ERROR HANDLING
+==================================================
+
+Handle:
+
+permission-denied
+unauthenticated
+not-found
+unavailable
+network errors
+timeout
+invalid data
+
+Gracefully.
+
+Never crash because one Firestore document has missing/invalid optional fields.
+
+==================================================
+61. FIREBASE CONFIGURATION SAFETY
+==================================================
+
+Do not expose:
+
+Firebase Admin credentials
+service-account private keys
+FCM server keys
+private API secrets
+
+The normal Firebase Android client configuration is acceptable.
+
+Never hard-code owner passwords.
+
+==================================================
+62. FIRST RUN EXPERIENCE
+==================================================
+
+First launch:
+
+Splash
+
+↓
+
+Login
+
+↓
+
+Owner authentication
+
+↓
+
+Dashboard
+
+If already authenticated:
+
+Splash
+
+↓
+
+Dashboard
+
+==================================================
+63. APP ICON / BRANDING
+==================================================
+
+Create a professional PRICINA app icon based on the existing PRICINA visual identity.
+
+Do not use a generic Firebase icon.
+
+Use a clean premium mark.
+
+==================================================
+64. FINAL QUALITY BAR
+==================================================
+
+Before considering the app complete, verify:
+
+AUTH:
+✓ Owner login works
+✓ Unauthorized users cannot access leads
+✓ Session persists
+✓ Logout works
+
+FIRESTORE:
+✓ Existing project used
+✓ Existing (default) database used
+✓ Existing leads collection used
+✓ No duplicate database
+✓ No Realtime Database
+✓ Lead documents load correctly
+✓ Missing fields do not crash app
+
+REAL-TIME:
+✓ New website submission appears automatically
+✓ No manual refresh required
+
+NEW/OLD:
+✓ New leads visible
+✓ Existing/history visible
+✓ Multiple inquiries preserved
+
+DETAILS:
+✓ Customer name
+✓ Phone
+✓ Email
+✓ Business name
+✓ Business type
+✓ Plan
+✓ Services
+✓ Message
+✓ Date
+✓ Time
+✓ Status
+✓ Client type
+✓ Inquiry history
+
+CALL:
+✓ Phone number clickable
+✓ CALL button available
+✓ Android dialer opens
+✓ Number pre-filled
+✓ No automatic call
+
+MESSAGE:
+✓ Messaging/email intent works where available
+✓ No automatic sending
+
+NOTIFICATIONS:
+✓ FCM configured
+✓ New inquiry notification
+✓ Limited information in notification
+✓ Notification clickable
+✓ Correct lead opens
+✓ Unread badge works
+
+SECURITY:
+✓ No public lead reading
+✓ No delete feature
+✓ No admin credentials in app
+✓ No fake authentication
+✓ No insecure allow-read/write-all rules
+
+UI/UX:
+✓ Premium PRICINA design
+✓ Smooth transitions
+✓ Proper animations
+✓ Responsive Android layout
+✓ Loading states
+✓ Error states
+✓ Empty states
+✓ Accessible controls
+
+==================================================
+65. IMPORTANT — DO NOT CHANGE THE WEBSITE
+==================================================
+
+The PRICINA customer website is already working.
+
+DO NOT:
+
+- rebuild the website
+- change the website design
+- remove the existing form
+- create another Firebase project
+- create another Firestore database
+- move the leads to another collection
+- switch to Realtime Database
+- delete existing Firestore documents
+- create fake customer data
+
+The Android app must connect to the EXISTING backend.
+
+==================================================
+66. IMPORTANT — DO NOT BUILD A FAKE UI
+==================================================
+
+Every major screen must be functional.
+
+Do not create buttons that do nothing.
+
+Do not use hard-coded fake statistics.
+
+Do not use fake customer records.
+
+Do not use fake notifications.
+
+Do not simulate Firestore with local JSON.
+
+Connect the actual UI to Firebase.
+
+==================================================
+67. FINAL APP FLOW
+==================================================
+
+FINAL USER EXPERIENCE:
+
+PRICINA OWNER
+
+↓
+
+Open App
+
+↓
+
+PRICINA Splash
+
+↓
+
+Secure Owner Login
+
+↓
+
+Dashboard
+
+↓
+
+NEW INQUIRY ARRIVES
+
+↓
+
+Real-time Firestore update
+
++
+
+Android Push Notification
+
+↓
+
+Notification:
+
+"New inquiry from Vas"
+
+↓
+
+Owner taps notification
+
+↓
+
+Exact customer profile opens
+
+↓
+
+Customer information:
+
+Vas
+9876543210
+username@gmail.com
+
+Business:
+Example Business
+
+Type:
+Business Type
+
+Plan:
+Premium
+
+Services:
+Selected services
+
+Message:
+Full requirements
+
+Submitted:
+18 Sep 2026
+12:58 PM
+
+Status:
+New
+
+Client:
+New / Existing
+
+↓
+
+Owner taps CALL
+
+↓
+
+Android Phone Dialer opens
+
+↓
+
+Number already filled
+
+↓
+
+Owner manually calls customer.
+
+==================================================
+68. FINAL INSTRUCTION
+==================================================
+
+Build this as a polished, professional PRICINA Owner Android application.
+
+Prioritize:
+
+SECURITY
+REAL FIREBASE DATA
+REAL-TIME UPDATES
+RELIABILITY
+UI/UX
+SPEED
+ACCESSIBILITY
+CLEAN ARCHITECTURE
+SCALABILITY
+
+Use the existing PRICINA branding and existing Firestore backend.
+
+Do not simplify this into a basic CRUD app.
+
+The final result should feel like a premium private CRM/lead-management application built specifically for PRICINA.

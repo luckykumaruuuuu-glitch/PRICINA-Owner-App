@@ -1,0 +1,1 @@
+- [Firebase Expo compatibility](firebase-expo-compat.md) — the installed Firebase SDK lacks the legacy React Native auth persistence subpath; verify exports before importing native-only auth modules.

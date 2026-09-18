@@ -1,0 +1,43 @@
+IMPORTANT — Before considering the PRICINA Owner app complete, do NOT just report “done”.
+
+When implementation is finished, perform a complete requirement-by-requirement verification against the attached PRICINA Owner build brief.
+
+The final submission MUST include a COMPLETE IMPLEMENTATION REPORT containing:
+
+1. Executive Summary
+2. Every implemented screen and feature
+3. Firebase integration details
+4. Existing Firestore collection/schema compatibility
+5. Real-time Firestore lead flow verification
+6. New vs Existing Client logic
+7. Lead detail/profile functionality
+8. Call, WhatsApp and Email actions
+9. Android notification implementation and notification tap routing
+10. Notification privacy/masked phone verification
+11. Authentication/security architecture
+12. Firestore Security Rules verification
+13. No-delete policy verification in both UI and backend rules
+14. Search and filtering
+15. Loading, empty, error and offline states
+16. UI/UX, animations and transitions
+17. Android 13+ notification permission handling
+18. Firebase Cloud Messaging setup
+19. App Check status, if implemented
+20. Testing performed for every major feature
+21. End-to-end test:
+    Website form → Firestore → Owner Android App → Real-time lead → Notification → Lead Profile
+22. Build/compile status
+23. APK/AAB generation status
+24. Any Firebase Console/manual configuration still required
+25. Known bugs, limitations or pending work
+26. Final requirement checklist showing:
+    PASS / FAIL / NOT IMPLEMENTED
+    for EVERY requirement from the attached build brief.
+
+Do not hide incomplete items.
+
+If any requirement from the build brief is missing, broken, only partially implemented, or requires manual Firebase Console configuration, clearly identify it in the final report.
+
+Before giving the final report, actually test the implemented functionality wherever possible. Do not claim something is working unless it has been verified.
+
+The final report must be detailed enough that I can compare it directly against the original build brief and immediately see what is complete and what remains.

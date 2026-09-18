@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "PRICINA Owner",
+    "slug": "pricina-owner",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/pricina-mark.png",
+    "scheme": "pricina-owner",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.pricina.owner"
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

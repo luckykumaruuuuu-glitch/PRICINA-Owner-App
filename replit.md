@@ -1,6 +1,6 @@
-# [Project name]
+# PRICINA Owner
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Private Expo owner portal for monitoring and managing PRICINA customer inquiries from the existing Firebase `leads` collection.
 
 ## Run & Operate
 
@@ -10,6 +10,15 @@ _Replace the heading above with the project's name, and this line with one sente
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Required env: `DATABASE_URL` — Postgres connection string
+
+## Mobile app
+
+- `pnpm --filter @workspace/pricina-owner run dev` — run the Expo preview
+- `pnpm --filter @workspace/pricina-owner run typecheck` — check the mobile app
+- `cd artifacts/pricina-owner && pnpm exec expo install --check` — verify Expo SDK alignment
+- `cd artifacts/pricina-owner && pnpm exec expo-doctor` — verify Expo environment health
+- Firebase client configuration is in `artifacts/pricina-owner/lib/firebase.ts`; it targets project `pricina-a47fa`.
+- `artifacts/pricina-owner/firestore.rules` is the owner-only/no-delete ruleset to apply in the existing Firebase project.
 
 ## Stack
 
@@ -22,23 +31,32 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/pricina-owner/app/` — Expo Router routes for login, dashboard tabs, and lead details
+- `artifacts/pricina-owner/context/AppContext.tsx` — Firebase Auth, Firestore listener, owner authorization, lead normalization, status updates
+- `artifacts/pricina-owner/components/PricinaUI.tsx` — shared PRICINA visual components and formatting helpers
+- `artifacts/pricina-owner/constants/colors.ts` — dark PRICINA theme tokens
+- `artifacts/pricina-owner/firestore.rules` — security rules source for manual Firebase Console deployment
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Firestore remains the source of truth; the app subscribes to `leads` in real time and keeps historical inquiries intact.
+- Owner access is gated by Firebase Auth plus a `users/{uid}` document whose `role` is exactly `owner`.
+- Repeat-customer detection uses normalized phone numbers without merging or deleting historical lead documents.
+- The first preview build uses the Firebase JavaScript SDK so Expo Go and Expo Web can share the same client integration; native FCM delivery still needs server-side Firebase setup.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+PRICINA Owner gives authorized owners a focused dark mobile CRM for live inquiry monitoring, searchable lead history, client relationship context, status updates, and direct call/message/email actions.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+The requested product is private-owner-only, must use the existing Firebase project and `leads` collection, and must never expose delete actions.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Do not replace the existing customer website or create a second Firebase project/database.
+- The `users/{uid}` owner document and Firestore rules must be configured in Firebase Console before real owner data can load.
+- Expo Doctor may report newly published patch versions before the package firewall considers them mature; use the exact compatible patch versions already installed if that happens.
 
 ## Pointers
 
