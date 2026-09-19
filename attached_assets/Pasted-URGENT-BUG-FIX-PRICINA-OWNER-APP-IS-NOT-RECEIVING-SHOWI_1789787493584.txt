@@ -1,0 +1,458 @@
+URGENT BUG FIX — PRICINA OWNER APP IS NOT RECEIVING/SHOWING NEW CUSTOMER REQUESTS
+
+The Owner app UI has already been implemented, but when a customer submits a request/inquiry from the PRICINA website, the request is successfully being stored in Firebase/Firestore, yet it is NOT appearing inside the PRICINA Owner Android app.
+
+This is a critical backend/data-flow issue.
+
+DO NOT redesign the app.
+DO NOT replace Firebase with mock data.
+DO NOT create a separate fake collection.
+DO NOT simply add sample leads to make the UI look populated.
+
+Find the actual root cause and fix the complete flow:
+
+CUSTOMER WEBSITE
+→ Firestore
+→ Owner App Firestore listener/query
+→ New Lead appears immediately
+→ Notification
+→ Lead Detail/Profile
+
+PROJECT:
+Firebase Project ID: pricina-a47fa
+
+IMPORTANT:
+The existing website is already submitting customer requests successfully to Firebase. Therefore, FIRST inspect the existing website/Firebase implementation and determine the EXACT Firestore collection path, document structure, and field names currently being used.
+
+The Owner app MUST use the same existing collection and schema.
+
+1. INSPECT EXISTING FIRESTORE DATA
+
+Verify directly from the existing Firebase project/code:
+
+- Exact collection name
+- Exact document path
+- Existing document IDs
+- All field names
+- Field data types
+- createdAt type
+- phone field
+- name field
+- email field
+- business information
+- selected plan
+- services
+- message
+- status
+- any existing/new client field
+- any other fields already being written by the website
+
+Do NOT assume the collection is called "leads" if the website currently uses another collection.
+
+Do NOT create a second collection just because the Owner app currently expects a different path.
+
+If the website uses something like:
+inquiries
+requests
+contactSubmissions
+leads
+customerRequests
+or another collection,
+make the Owner app read THAT exact collection.
+
+2. COMPARE WEBSITE WRITE VS APP READ
+
+Inspect the code responsible for submitting the website form.
+
+Identify exactly where it writes:
+
+collection(...)
+addDoc(...)
+setDoc(...)
+or any backend/API function.
+
+Then inspect the Owner app code responsible for reading data:
+
+collection(...)
+query(...)
+where(...)
+orderBy(...)
+onSnapshot(...)
+getDocs(...)
+etc.
+
+Compare both sides field-by-field and path-by-path.
+
+Fix any mismatch.
+
+Examples of bugs to look for:
+
+- Website writes to "inquiries" but app reads "leads"
+- Website writes to "requests" but app reads "customers"
+- App uses wrong Firebase project
+- App uses wrong database
+- App uses wrong collection
+- App filters using a field that does not exist
+- App expects Timestamp but receives string
+- App expects createdAt but website uses submittedAt
+- App expects status but old documents don't have status
+- App query/orderBy prevents documents from appearing
+- App only loads "new" documents while website documents have another status
+- App reads a subcollection while website writes to a root collection
+- Firebase initialization points to a different project
+- Auth state is not ready when the listener starts
+- Firestore permissions reject the query
+- Realtime listener is not actually attached
+- Listener is unsubscribed too early
+- React/Expo lifecycle prevents the listener from updating the UI
+- App catches Firestore errors and silently displays an empty list
+
+3. VERIFY FIREBASE PROJECT
+
+Make sure the Owner app is connected to:
+
+pricina-a47fa
+
+Verify the actual Firebase configuration used by the mobile app.
+
+Do not accidentally use:
+
+- another Firebase project
+- development Firebase project
+- old project
+- emulator
+- hardcoded fake database
+
+Log/verify the actual Firebase project ID during development.
+
+4. VERIFY FIRESTORE DATABASE
+
+The existing customer submissions are in Cloud Firestore.
+
+The Owner app must read from the same Firestore database.
+
+Do not switch to Realtime Database.
+
+Do not create a second database.
+
+Verify the exact database and collection being used.
+
+5. FIX REAL-TIME LISTENER
+
+The Owner app must listen to the correct collection in real time.
+
+When a customer submits a new request:
+
+1. Website writes the document
+2. Firestore receives it
+3. Owner app listener detects it
+4. Lead immediately appears in New Leads
+5. Dashboard counters update
+6. Notification is triggered
+7. Tapping notification opens the correct lead detail
+
+No manual refresh should be required.
+
+Use a proper Firestore realtime listener such as onSnapshot where appropriate.
+
+Make the listener lifecycle-safe and unsubscribe correctly when the screen/component is destroyed.
+
+6. DO NOT FILTER OUT REAL LEADS
+
+Temporarily remove unnecessary filters while debugging.
+
+First prove that the Owner app can retrieve ALL existing customer requests from the correct collection.
+
+After that, implement:
+
+New Leads
+Existing/Old Leads
+All Leads
+Status filters
+
+Do not let a missing/incorrect field silently hide the document.
+
+If a document does not contain a status field, handle it safely instead of excluding it.
+
+7. FIRESTORE SECURITY RULES
+
+Check the current Firestore Security Rules.
+
+The app must have permission to read the lead/request documents.
+
+At the same time, do NOT make the entire Firestore database publicly readable just to fix this issue.
+
+The correct architecture should remain:
+
+PUBLIC CUSTOMER WEBSITE
+→ allowed to CREATE a request
+
+OWNER APP
+→ authenticated/authorized owner
+→ allowed to READ and UPDATE lead records
+
+OWNER APP
+→ NOT allowed to DELETE
+
+PUBLIC USER
+→ NOT allowed to READ customer leads
+
+If authentication is required for owner reads, make sure the Owner app authentication/session is actually established BEFORE starting the Firestore listener.
+
+Do not weaken production security to:
+allow read, write: if true;
+
+Do not use a temporary insecure rule as the final solution.
+
+Firebase Security Rules are what determine whether mobile/web client requests are allowed, and authenticated access can be enforced through request.auth.
+
+8. IMPORTANT AUTHENTICATION CHECK
+
+The Owner app was designed to avoid a visible login screen.
+
+Keep the no-visible-login UX if already implemented.
+
+However, verify that the Owner app has a valid authenticated/authorized Firebase session if Firestore rules require authentication.
+
+If the app is currently unauthenticated and therefore receives "permission-denied", fix the authentication/session flow rather than making Firestore public.
+
+Do not expose customer data publicly.
+
+9. SHOW ACTUAL FIRESTORE ERRORS
+
+The current app must NOT silently convert Firebase errors into:
+
+"No leads found"
+
+If Firestore fails, show/log the actual error:
+
+- permission-denied
+- unavailable
+- failed-precondition
+- not-found
+- invalid-argument
+- network error
+- index error
+- authentication error
+
+During development, log:
+
+Firebase project ID
+Collection path
+Current authenticated UID
+Firestore listener status
+Number of documents received
+Firestore error code/message
+
+This is necessary to identify the actual failure.
+
+10. VERIFY EXISTING DATA
+
+Use the actual customer requests already present in Firestore.
+
+The Owner app must display existing records immediately after the fix.
+
+Do not wait for a new request to test it.
+
+If there are already 5, 10, 20 etc. submissions in Firestore, the app should show them.
+
+11. NEW REQUEST TEST
+
+After fixing the listener:
+
+Test this exact sequence:
+
+A. Open PRICINA website
+B. Submit a completely new customer request
+C. Confirm the document appears in Firestore
+D. Keep Owner app open
+E. Verify the new request appears automatically
+F. Verify dashboard count changes
+G. Verify it appears under New Leads
+H. Verify customer profile opens
+I. Verify full phone number is visible inside profile
+J. Verify Call button opens the Android dialer with the correct number
+K. Verify WhatsApp action if implemented
+L. Verify notification
+M. Tap notification
+N. Verify it opens that exact lead
+
+12. EXISTING LEAD TEST
+
+Take an existing Firestore request.
+
+Verify it appears in the Owner app.
+
+Open it.
+
+Verify every available field is displayed correctly.
+
+Do not lose old records.
+
+13. DATA MAPPING
+
+Create a single clean mapping layer/model between Firestore documents and the app UI.
+
+For example:
+
+Firestore document
+→ Lead model
+→ UI
+
+Do not scatter hardcoded field names throughout multiple screens.
+
+Handle missing fields safely.
+
+Use safe defaults only where appropriate.
+
+Do NOT replace real missing data with fake customer information.
+
+14. DATE/TIME
+
+Use the actual Firestore server timestamp already stored by the website.
+
+Display:
+
+- date
+- time
+- relative time if desired
+
+Handle Firestore Timestamp correctly.
+
+Do not use the phone's current time as the submission time.
+
+15. NEW / EXISTING CLIENT
+
+Do not blindly trust a frontend-provided "new" or "existing" value.
+
+Use the existing backend/source-of-truth logic.
+
+If the current system does not yet reliably determine this, first display all requests correctly and then implement the classification without breaking the existing data flow.
+
+16. DASHBOARD
+
+After fixing Firestore data retrieval, verify dashboard cards use REAL Firestore data.
+
+For example:
+
+Total Leads
+New Leads
+Existing Clients
+Contacted
+In Progress
+Converted
+Closed
+
+No hardcoded numbers.
+
+17. NOTIFICATIONS
+
+Once the Firestore listener receives a genuinely new request:
+
+- trigger the appropriate Android notification architecture
+- show customer name
+- show masked phone number only
+- never expose the full phone number in the notification
+- tapping notification opens the correct lead
+
+Example:
+
+New Request
+Rahul Sharma ••••1234
+
+Do not show the full phone number in the notification.
+
+18. SEARCH/FILTER
+
+After the basic data flow works, verify search/filter uses the actual loaded Firestore data.
+
+Do not make search depend on fake/local demo data.
+
+19. OFFLINE/LOADING STATES
+
+Show proper states:
+
+Loading:
+"Loading requests..."
+
+Empty:
+"No requests yet"
+
+Error:
+"Unable to load requests"
+
++ development error details/logging
+
+Do not show "No requests yet" when the actual problem is permission-denied or a Firestore connection error.
+
+20. DO NOT BREAK THE WEBSITE
+
+The existing website submission flow is already working.
+
+Do not modify it unnecessarily.
+
+If a website-side change is absolutely required, preserve the existing submission behavior and verify that submissions continue appearing in Firestore after the change.
+
+21. END-TO-END VERIFICATION
+
+The final test must prove:
+
+Website Form
+↓
+Firestore Document Created
+↓
+Owner App Firestore Listener
+↓
+Owner App Receives Document
+↓
+Dashboard Updated
+↓
+New Leads Updated
+↓
+Notification
+↓
+Lead Profile
+↓
+Call/WhatsApp/Email Actions
+
+22. FINAL DEBUG REPORT
+
+After fixing the issue, report:
+
+ROOT CAUSE:
+Exactly why the request was not appearing.
+
+FIRESTORE COLLECTION:
+Exact collection path used.
+
+FIREBASE PROJECT:
+Confirmed project ID.
+
+APP QUERY:
+Exact query/listener used.
+
+SECURITY:
+What rule/authentication issue existed and how it was fixed.
+
+DATA MAPPING:
+Which Firestore fields map to which app fields.
+
+REAL-TIME:
+Confirmed whether onSnapshot/realtime listener is receiving new documents.
+
+NOTIFICATIONS:
+Confirmed whether new requests generate notifications.
+
+TEST RESULT:
+Existing request test: PASS/FAIL
+New request test: PASS/FAIL
+Dashboard update: PASS/FAIL
+Lead detail: PASS/FAIL
+Call action: PASS/FAIL
+Notification: PASS/FAIL
+Notification tap: PASS/FAIL
+
+IMPORTANT:
+Do not give me a generic explanation.
+
+Actually inspect the existing Firebase integration and existing Firestore data, find the mismatch/error, fix it, and verify that a real website submission appears in the Owner app without manually refreshing.

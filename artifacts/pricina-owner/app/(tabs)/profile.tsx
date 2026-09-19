@@ -1,6 +1,5 @@
 import React from 'react';
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { router } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { BrandMark, ScreenHeader } from '@/components/PricinaUI';
 import { useApp } from '@/context/AppContext';
@@ -24,17 +23,7 @@ function SettingRow({ icon, label, detail, onPress }: { icon: keyof typeof Feath
 
 export default function ProfileScreen() {
   const colors = useColors();
-  const { user, logout } = useApp();
-  const doLogout = () => {
-    if (Platform.OS === 'web') {
-      void logout().then(() => router.replace('/login'));
-      return;
-    }
-    Alert.alert('Sign out?', 'You will need to sign in again to access owner data.', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign out', style: 'destructive', onPress: () => void logout().then(() => router.replace('/login')) },
-    ]);
-  };
+  const { user } = useApp();
   return (
     <ScrollView style={{ backgroundColor: colors.background }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <ScreenHeader eyebrow="ACCOUNT" title="Profile" />
@@ -56,10 +45,6 @@ export default function ProfileScreen() {
         <SettingRow icon="lock" label="Security" detail="Firebase owner authentication" />
         <SettingRow icon="info" label="About PRICINA" detail="Private lead management portal" />
       </View>
-      <Pressable onPress={doLogout} style={[styles.logout, { borderColor: colors.border }]}>
-        <Feather name="log-out" size={17} color={colors.destructive} />
-        <Text style={[styles.logoutText, { color: colors.destructive }]}>Sign out</Text>
-      </Pressable>
       <Text style={[styles.footer, { color: colors.mutedForeground }]}>PRICINA Owner Portal · Lead history is never deleted.</Text>
     </ScrollView>
   );
@@ -80,7 +65,5 @@ const styles = StyleSheet.create({
   rowCopy: { flex: 1, gap: 4 },
   rowLabel: { fontSize: 13, fontWeight: '600' },
   rowDetail: { fontSize: 11 },
-  logout: { minHeight: 52, borderWidth: 1, borderRadius: 15, marginTop: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  logoutText: { fontSize: 13, fontWeight: '700' },
   footer: { textAlign: 'center', fontSize: 10, marginTop: 20 },
 });
