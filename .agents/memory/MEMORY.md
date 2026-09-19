@@ -1,1 +1,2 @@
 - [Firebase Expo compatibility](firebase-expo-compat.md) — the installed Firebase SDK lacks the legacy React Native auth persistence subpath; verify exports before importing native-only auth modules.
+- [Silent owner authentication](silent-owner-auth.md) — direct-open UX still needs a secure Firebase owner session; never replace it with public reads or client-bundled credentials.
