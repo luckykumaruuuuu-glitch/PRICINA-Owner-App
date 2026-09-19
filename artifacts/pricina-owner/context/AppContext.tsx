@@ -10,6 +10,7 @@ import React, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   onAuthStateChanged,
+  signInWithCustomToken,
   signInWithEmailAndPassword,
   signOut,
   type User,
@@ -20,7 +21,6 @@ import {
   getDoc,
   limit,
   onSnapshot,
-  orderBy,
   query,
   serverTimestamp,
   updateDoc,
@@ -127,7 +127,9 @@ const mapLead = (id: string, value: Record<string, unknown>): Lead => ({
       ? [String(value.services)]
       : [],
   message: stringValue(value.message),
-  createdAt: timestampValue(value.createdAt),
+  createdAt: timestampValue(
+    value.createdAt ?? value.submittedAt ?? value.submitted_at ?? value.timestamp,
+  ),
   status: statusValue(value.status),
   clientType: stringValue(value.clientType),
   isExisting: false,
@@ -142,6 +144,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [refreshVersion, setRefreshVersion] = useState(0);
   const knownLeadIds = useRef<Set<string> | null>(null);
+  const silentSessionRequested = useRef(false);
 
   useEffect(() => {
     let mounted = true;
@@ -153,11 +156,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setNotifications([]);
       }
     });
+
+    const requestSilentOwnerSession = async () => {
+      try {
+        const baseUrl =
+          typeof window !== 'undefined'
+            ? window.location.origin
+            : `https://${process.env.EXPO_PUBLIC_DOMAIN ?? ''}`;
+        const response = await fetch(`${baseUrl}/api/owner/session`, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) {
+          throw new Error(`Owner session bridge returned HTTP ${response.status}.`);
+        }
+        const body = (await response.json()) as { token?: string };
+        if (!body.token) throw new Error('Owner session bridge returned no token.');
+        await signInWithCustomToken(firebaseAuth, body.token);
+      } catch (caught) {
+        if (!mounted) return;
+        const message = caught instanceof Error ? caught.message : 'Unable to restore owner session.';
+        if (__DEV__) console.error('[PRICINA] Silent owner session failed', message);
+        setError(`Owner session unavailable: ${message}`);
+        setIsLoading(false);
+      }
+    };
+
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (nextUser) => {
       if (!mounted) return;
       if (!nextUser) {
         setUser(null);
-        setIsLoading(false);
+        if (!silentSessionRequested.current) {
+          silentSessionRequested.current = true;
+          void requestSilentOwnerSession();
+        } else {
+          setIsLoading(false);
+        }
         return;
       }
       try {
@@ -187,19 +221,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setLeads([]);
       setIsLeadsLoading(false);
       knownLeadIds.current = null;
+      setError('Owner session is not available for Firestore lead access.');
       return;
     }
     setIsLeadsLoading(true);
     setError(null);
-    const leadsQuery = query(
-      collection(firestore, 'leads'),
-      orderBy('createdAt', 'desc'),
-      limit(200),
-    );
+    const leadsQuery = query(collection(firestore, 'leads'), limit(200));
+    if (__DEV__) {
+      console.info('[PRICINA] Firestore listener starting', {
+        projectId: firebaseProjectId,
+        collection: 'leads',
+        uid: firebaseAuth.currentUser?.uid ?? user.uid,
+      });
+    }
     const unsubscribe = onSnapshot(
       leadsQuery,
       (snapshot) => {
-        const mapped = snapshot.docs.map((leadDoc) => mapLead(leadDoc.id, leadDoc.data()));
+        const mapped = snapshot.docs
+          .map((leadDoc) => mapLead(leadDoc.id, leadDoc.data()))
+          .sort((left, right) => {
+            const toMillis = (value: Lead['createdAt']) => {
+              if (!value) return 0;
+              if (value instanceof Date) return value.getTime();
+              if (typeof value === 'object' && 'toDate' in value) return value.toDate().getTime();
+              const parsed = new Date(value).getTime();
+              return Number.isNaN(parsed) ? 0 : parsed;
+            };
+            return toMillis(right.createdAt) - toMillis(left.createdAt);
+          });
+        if (__DEV__) {
+          console.info('[PRICINA] Firestore listener received documents', {
+            projectId: firebaseProjectId,
+            collection: 'leads',
+            uid: firebaseAuth.currentUser?.uid ?? user.uid,
+            count: mapped.length,
+          });
+        }
         const phoneCounts = new Map<string, number>();
         mapped.forEach((lead) => {
           const phone = normalizePhone(lead.phone);
@@ -239,11 +296,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       },
       (snapshotError) => {
         setIsLeadsLoading(false);
-        setError(
-          snapshotError.code === 'permission-denied'
-            ? 'Your owner session cannot read leads. Check Firestore rules.'
-            : 'Unable to load inquiries. Please check your connection.',
-        );
+        const errorCode = snapshotError.code ?? 'unknown';
+        const errorMessage = snapshotError.message ?? 'Unknown Firestore error.';
+        if (__DEV__) {
+          console.error('[PRICINA] Firestore listener failed', {
+            projectId: firebaseProjectId,
+            collection: 'leads',
+            uid: firebaseAuth.currentUser?.uid ?? user.uid,
+            code: errorCode,
+            message: errorMessage,
+          });
+        }
+        setError(`Unable to load inquiries (${errorCode}): ${errorMessage}`);
       },
     );
     return unsubscribe;
