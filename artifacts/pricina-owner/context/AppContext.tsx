@@ -10,7 +10,6 @@ import React, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   onAuthStateChanged,
-  signInWithCustomToken,
   signInWithEmailAndPassword,
   signOut,
   type User,
@@ -144,7 +143,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [refreshVersion, setRefreshVersion] = useState(0);
   const knownLeadIds = useRef<Set<string> | null>(null);
-  const silentSessionRequested = useRef(false);
 
   useEffect(() => {
     let mounted = true;
@@ -157,41 +155,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
     });
 
-    const requestSilentOwnerSession = async () => {
-      try {
-        const baseUrl =
-          typeof window !== 'undefined'
-            ? window.location.origin
-            : `https://${process.env.EXPO_PUBLIC_DOMAIN ?? ''}`;
-        const response = await fetch(`${baseUrl}/api/owner/session`, {
-          method: 'POST',
-          headers: { Accept: 'application/json' },
-        });
-        if (!response.ok) {
-          throw new Error(`Owner session bridge returned HTTP ${response.status}.`);
-        }
-        const body = (await response.json()) as { token?: string };
-        if (!body.token) throw new Error('Owner session bridge returned no token.');
-        await signInWithCustomToken(firebaseAuth, body.token);
-      } catch (caught) {
-        if (!mounted) return;
-        const message = caught instanceof Error ? caught.message : 'Unable to restore owner session.';
-        if (__DEV__) console.error('[PRICINA] Silent owner session failed', message);
-        setError(`Owner session unavailable: ${message}`);
-        setIsLoading(false);
-      }
-    };
-
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (nextUser) => {
       if (!mounted) return;
       if (!nextUser) {
         setUser(null);
-        if (!silentSessionRequested.current) {
-          silentSessionRequested.current = true;
-          void requestSilentOwnerSession();
-        } else {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
         return;
       }
       try {

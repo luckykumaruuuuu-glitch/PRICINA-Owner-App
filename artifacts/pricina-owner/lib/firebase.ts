@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, initializeAuth, type Persistence } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { Platform } from 'react-native';
 
 const firebaseConfig = {
   apiKey:
@@ -24,6 +26,31 @@ const firebaseConfig = {
 
 export const firebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-export const firebaseAuth = getAuth(firebaseApp);
+const asyncStoragePersistence = {
+  type: 'LOCAL' as const,
+  _isAvailable: async () => true,
+  _set: async (key: string, value: Record<string, unknown> | string) => {
+    await AsyncStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+  },
+  _get: async <T extends Record<string, unknown> | string>(key: string) => {
+    const value = await AsyncStorage.getItem(key);
+    if (value === null) return null;
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as T;
+    }
+  },
+  _remove: async (key: string) => {
+    await AsyncStorage.removeItem(key);
+  },
+  _addListener: () => undefined,
+  _removeListener: () => undefined,
+} as unknown as Persistence;
+
+export const firebaseAuth =
+  Platform.OS === 'web'
+    ? getAuth(firebaseApp)
+    : initializeAuth(firebaseApp, { persistence: asyncStoragePersistence });
 export const firestore = getFirestore(firebaseApp);
 export const firebaseProjectId = firebaseConfig.projectId;
