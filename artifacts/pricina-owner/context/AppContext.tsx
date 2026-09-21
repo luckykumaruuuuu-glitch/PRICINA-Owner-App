@@ -18,9 +18,7 @@ import {
   collection,
   doc,
   getDoc,
-  limit,
   onSnapshot,
-  query,
   serverTimestamp,
   updateDoc,
   type Timestamp,
@@ -77,6 +75,7 @@ interface AppContextValue {
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
 const notificationsKey = '@pricina/notifications';
+const leadsCollection = 'leads';
 
 const fallback = 'Not provided';
 const stringValue = (value: unknown) =>
@@ -194,16 +193,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
     setIsLeadsLoading(true);
     setError(null);
-    const leadsQuery = query(collection(firestore, 'leads'), limit(200));
+    // Keep the listener unfiltered so existing documents and newly submitted
+    // documents are both visible, including legacy records without optional
+    // fields. The UI sorts the normalized records by their real submission
+    // timestamp below.
+    const leadsCollectionRef = collection(firestore, leadsCollection);
     if (__DEV__) {
       console.info('[PRICINA] Firestore listener starting', {
         projectId: firebaseProjectId,
-        collection: 'leads',
+        collection: leadsCollection,
         uid: firebaseAuth.currentUser?.uid ?? user.uid,
       });
     }
     const unsubscribe = onSnapshot(
-      leadsQuery,
+      leadsCollectionRef,
       (snapshot) => {
         const mapped = snapshot.docs
           .map((leadDoc) => mapLead(leadDoc.id, leadDoc.data()))
@@ -220,7 +223,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         if (__DEV__) {
           console.info('[PRICINA] Firestore listener received documents', {
             projectId: firebaseProjectId,
-            collection: 'leads',
+            collection: leadsCollection,
             uid: firebaseAuth.currentUser?.uid ?? user.uid,
             count: mapped.length,
           });
@@ -269,7 +272,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         if (__DEV__) {
           console.error('[PRICINA] Firestore listener failed', {
             projectId: firebaseProjectId,
-            collection: 'leads',
+            collection: leadsCollection,
             uid: firebaseAuth.currentUser?.uid ?? user.uid,
             code: errorCode,
             message: errorMessage,
@@ -302,7 +305,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       current.map((lead) => (lead.id === id ? { ...lead, status } : lead)),
     );
     try {
-      await updateDoc(doc(firestore, 'leads', id), {
+      await updateDoc(doc(firestore, leadsCollection, id), {
         status,
         updatedAt: serverTimestamp(),
       });
