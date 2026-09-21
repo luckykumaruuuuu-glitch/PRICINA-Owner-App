@@ -85,11 +85,6 @@ export function LeadCard({
       ]}
     >
       <View style={styles.leadTop}>
-        <View style={styles.avatar}>
-          <Text style={[styles.avatarText, { color: colors.primary }]}>
-            {lead.name.slice(0, 1).toUpperCase()}
-          </Text>
-        </View>
         <View style={styles.leadIdentity}>
           <Text numberOfLines={1} style={[styles.leadName, { color: colors.foreground }]}>
             {lead.name}
@@ -104,41 +99,18 @@ export function LeadCard({
         <Text style={[styles.metaText, { color: colors.primary }]}>{lead.selectedPlan}</Text>
         <Text style={[styles.metaDot, { color: colors.mutedForeground }]}>·</Text>
         <Text numberOfLines={1} style={[styles.metaText, { color: colors.mutedForeground }]}>
-          {lead.message}
+          {lead.phone}
         </Text>
       </View>
       {!compact ? (
         <View style={styles.leadBottom}>
           <Text style={[styles.dateText, { color: colors.mutedForeground }]}>
-            {formatDate(lead.createdAt)}
+            {formatDate(lead.createdAt)} · {formatTime(lead.createdAt)}
           </Text>
           {lead.isExisting ? <Pill label="EXISTING" tone="success" /> : null}
         </View>
       ) : null}
     </Pressable>
-  );
-}
-
-export function StatCard({
-  icon,
-  value,
-  label,
-  accent,
-}: {
-  icon: keyof typeof Feather.glyphMap;
-  value: number;
-  label: string;
-  accent?: boolean;
-}) {
-  const colors = useColors();
-  return (
-    <View style={[styles.statCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-      <View style={[styles.statIcon, { backgroundColor: accent ? colors.accent : colors.secondary }]}>
-        <Feather name={icon} size={16} color={accent ? colors.primary : colors.mutedForeground} />
-      </View>
-      <Text style={[styles.statValue, { color: colors.foreground }]}>{value}</Text>
-      <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>{label}</Text>
-    </View>
   );
 }
 
@@ -277,8 +249,6 @@ const styles = StyleSheet.create({
   pillText: { fontSize: 10, fontWeight: '700', letterSpacing: 0.7 },
   leadCard: { borderWidth: 1, borderRadius: 18, padding: 15, marginBottom: 10, gap: 13 },
   leadTop: { flexDirection: 'row', alignItems: 'center', gap: 11 },
-  avatar: { width: 40, height: 40, borderRadius: 14, backgroundColor: '#153250', alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontSize: 17, fontWeight: '700' },
   leadIdentity: { flex: 1, gap: 3 },
   leadName: { fontSize: 16, fontWeight: '700' },
   leadBusiness: { fontSize: 12 },
@@ -287,10 +257,6 @@ const styles = StyleSheet.create({
   metaDot: { fontSize: 15 },
   leadBottom: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   dateText: { fontSize: 11 },
-  statCard: { width: '48%', borderWidth: 1, borderRadius: 18, padding: 15, gap: 8 },
-  statIcon: { width: 30, height: 30, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  statValue: { fontSize: 27, fontWeight: '700', letterSpacing: -1 },
-  statLabel: { fontSize: 12 },
   empty: { borderWidth: 1, borderRadius: 20, alignItems: 'center', paddingHorizontal: 24, paddingVertical: 35, gap: 9 },
   emptyIcon: { width: 48, height: 48, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginBottom: 3 },
   emptyTitle: { fontSize: 17, fontWeight: '700' },

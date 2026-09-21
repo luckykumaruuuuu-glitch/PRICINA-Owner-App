@@ -1,0 +1,605 @@
+⚠️ IMPORTANT — THIS IS A SIMPLIFICATION + DATA-PERSISTENCE UPDATE.
+
+The main goal is:
+
+1. Make the PRICINA Owner app SIMPLE, CLEAN and EASY to use.
+2. Remove unnecessary visual/show-off elements and unnecessary options.
+3. Make sure ALL Firebase requests/history remain permanently available after app uninstall, reinstall, app data reset, or device change.
+
+DO NOT add unnecessary features.
+
+==================================================
+
+1. SIMPLE UI — NO SHOW-OFF DESIGN
+   ==================================================
+
+The current app feels too visually heavy and tries to show too much.
+
+I do NOT want that.
+
+The app should feel:
+
+- Simple
+- Clean
+- Professional
+- Spacious
+- Easy to understand
+- Easy to navigate
+- Comfortable to use daily
+
+Do NOT make the UI look crowded.
+
+Do NOT fill every empty space with cards, labels, statistics or decorative elements.
+
+Do NOT add unnecessary:
+
+- Dashboard widgets
+- Decorative cards
+- Large graphics
+- Excessive icons
+- Unnecessary animations
+- Extra tabs
+- Extra buttons
+- Unnecessary statistics
+- Fake activity indicators
+- Decorative charts
+- Complex navigation
+- Unnecessary filters
+
+Only show information that is actually useful to the PRICINA owner.
+
+==================================================
+2. OPEN / SPACIOUS LAYOUT
+
+The UI should have breathing space.
+
+Do NOT make the screen feel:
+
+"packed"
+"filled"
+"overloaded"
+
+Use:
+
+- Proper spacing
+- Simple sections
+- Clear headings
+- Comfortable margins
+- Easy-to-read text
+- Simple cards only where necessary
+
+Each important option should be clearly visible without making the screen crowded.
+
+==================================================
+3. ONLY REQUIRED OPTIONS
+
+Keep the app focused on the actual PRICINA Owner workflow.
+
+The main purpose is:
+
+CLIENT REQUESTS
+
+The owner should be able to easily see:
+
+- New Client Requests
+- Existing/Old Client Requests
+- Request date
+- Request time
+- Client name
+- Phone number
+- Business/Gym name
+- Selected plan
+- Relevant submitted information
+- Request status
+
+Do NOT add unrelated functionality.
+
+==================================================
+4. REQUEST SCREEN
+
+The main request interface should be simple.
+
+Use a clean list.
+
+Example:
+
+NEW REQUESTS
+
+Client Name
+Business Name
+Plan
+Date • Time
+Phone
+
+Then tap the request to see full details.
+
+Do NOT put every detail directly on the main list.
+
+The list should remain clean.
+
+==================================================
+5. REQUEST DETAILS
+
+When the owner taps a request, show a simple detail screen.
+
+Display:
+
+Client Name
+
+Phone Number
+
+Business / Gym
+
+Selected Plan
+
+Request Date
+
+Request Time
+
+Photo / Attachment, if submitted
+
+Other submitted information
+
+Status
+
+Keep this screen clean.
+
+Do not add unnecessary sections.
+
+==================================================
+6. PHONE NUMBER
+
+Phone number should be tappable.
+
+When the owner taps the phone number:
+
+Open the device's normal calling interface.
+
+Do not build a custom calling system.
+
+==================================================
+7. NEW / OLD CLIENTS
+
+Keep the existing concept:
+
+NEW CLIENTS
+
+OLD CLIENTS
+
+Do not add multiple unnecessary categories.
+
+If status-based organization is already implemented, keep it simple.
+
+==================================================
+8. FIREBASE DATA MUST BE PERMANENT
+
+THIS IS VERY IMPORTANT.
+
+All client requests submitted through the website/app must be stored in Firebase/Firestore as the source of truth.
+
+The app must NOT depend on:
+
+- Local device storage
+- SharedPreferences
+- Local SQLite
+- Temporary app state
+- In-memory arrays
+- Cached-only data
+
+for permanent request history.
+
+Firebase/Firestore must contain the actual persistent request records.
+
+==================================================
+9. APP UNINSTALL / REINSTALL
+
+If the PRICINA Owner app is:
+
+- Uninstalled
+- Deleted
+- Reinstalled
+- Updated
+- Reopened after a long period
+
+the previously submitted Firebase requests must still exist.
+
+After reinstalling the app and connecting to the same Firebase project/database, the app must fetch the existing request history again.
+
+Example:
+
+Day 1:
+
+100 requests exist in Firebase.
+
+Owner deletes/uninstalls the app.
+
+Day 10:
+
+Owner installs PRICINA Owner again.
+
+After connecting to the same Firebase project:
+
+The 100 existing requests must still be available.
+
+Do NOT recreate the database when the app starts.
+
+Do NOT clear Firestore.
+
+Do NOT overwrite existing requests.
+
+==================================================
+10. APP DATA RESET
+
+Even if the local app data is cleared:
+
+Firebase request history must remain.
+
+When the app starts again:
+
+Fetch the request data from Firebase.
+
+Do not treat local storage as the permanent database.
+
+==================================================
+11. NO DELETE REQUEST FUNCTION
+
+IMPORTANT:
+
+There should be NO delete option for client requests unless explicitly requested later.
+
+Do not add:
+
+Delete request
+Delete history
+Clear all
+Delete all
+
+The owner should not accidentally erase the request history from the app.
+
+==================================================
+12. FIREBASE QUERY
+
+The app should load request records directly from Firestore.
+
+Use a proper listener/query so that new requests can appear in the app without requiring the owner to manually recreate or re-enter anything.
+
+Existing historical records must also be loaded.
+
+Do NOT only fetch the latest request.
+
+Do NOT limit the interface to today's requests unless explicitly required.
+
+The owner should be able to access the complete request history.
+
+==================================================
+13. REQUEST HISTORY
+
+Keep historical requests available.
+
+For example:
+
+NEW
+
+- Request 1
+- Request 2
+- Request 3
+
+OLD / HISTORY
+
+- Request 4
+- Request 5
+- Request 6
+- Request 7
+
+Do not automatically delete old requests.
+
+Do not automatically archive them in a way that makes them inaccessible.
+
+==================================================
+14. FIREBASE DATA MODEL
+
+Each request should have a unique document ID.
+
+Do NOT use array-based storage where the entire request history can be accidentally overwritten.
+
+Use individual Firestore documents for individual requests.
+
+Example conceptual structure:
+
+requests/
+requestId1
+requestId2
+requestId3
+requestId4
+
+Each request should contain its own:
+
+- Client information
+- Plan
+- Date
+- Time
+- Status
+- Submitted fields
+- Attachment reference if applicable
+- Created timestamp
+
+==================================================
+15. CREATED TIMESTAMP
+
+Every request should have a reliable server-side creation timestamp.
+
+Do not depend only on the owner's device clock.
+
+This timestamp should be used for ordering requests.
+
+Newest requests should appear first.
+
+Older requests should remain accessible.
+
+==================================================
+16. NO DUPLICATE REQUESTS
+
+Be careful when implementing real-time listeners.
+
+Do not duplicate the same Firebase request every time the app refreshes.
+
+One Firestore document should represent one request.
+
+==================================================
+17. OFFLINE / NETWORK BEHAVIOR
+
+If the network temporarily disappears:
+
+Do not delete existing displayed data.
+
+When the network returns:
+
+Sync with Firebase.
+
+Firebase remains the source of truth.
+
+Do not create duplicate records during reconnection.
+
+==================================================
+18. APP REINSTALL TEST
+
+Before considering this feature complete, test:
+
+STEP 1:
+Create several test requests in Firebase.
+
+STEP 2:
+Open PRICINA Owner.
+
+Verify all requests appear.
+
+STEP 3:
+Close the app.
+
+Reopen it.
+
+Verify all requests remain.
+
+STEP 4:
+Uninstall the app.
+
+STEP 5:
+Install the same PRICINA Owner app again.
+
+STEP 6:
+Connect to the same Firebase project.
+
+Verify the previous requests appear again.
+
+STEP 7:
+Create a new request.
+
+Verify the old requests AND new request are both present.
+
+==================================================
+19. DO NOT CREATE A NEW FIREBASE PROJECT
+
+Do NOT create a new Firebase project as part of this update.
+
+Use the existing PRICINA Firebase project/configuration.
+
+Do NOT reset or recreate the Firestore database.
+
+Do NOT replace the existing collection with a new empty collection.
+
+If the existing collection already contains requests, preserve them.
+
+==================================================
+20. DO NOT LOSE EXISTING DATA
+
+Before changing the Firebase integration:
+
+Inspect the existing implementation.
+
+Identify:
+
+- Existing Firebase project
+- Existing Firestore collection
+- Existing document structure
+- Existing request fields
+
+Then make the app compatible with the existing data.
+
+Do NOT delete existing documents.
+
+Do NOT migrate destructively.
+
+Do NOT clear the collection.
+
+==================================================
+21. SIMPLE NAVIGATION
+
+Keep navigation minimal.
+
+Prefer something like:
+
+REQUESTS
+
+NEW CLIENTS
+OLD CLIENTS
+
+and the required account/settings option if already present.
+
+Do NOT create many navigation tabs.
+
+The owner should be able to reach a request in very few taps.
+
+==================================================
+22. NOTIFICATIONS
+
+If the existing notification functionality is already implemented, keep it.
+
+But do NOT add a complicated notification center just for visual effect.
+
+A simple indication such as:
+
+New Request
+
+is enough.
+
+Do not create unnecessary notification categories.
+
+==================================================
+23. ANIMATIONS
+
+Use minimal animation.
+
+No excessive:
+
+- Floating animations
+- 3D animations
+- Glowing animations
+- Card animations
+- Constant moving elements
+
+Simple transitions are enough.
+
+The app is a business utility, not an entertainment interface.
+
+==================================================
+24. VISUAL HIERARCHY
+
+The most important information should be visually obvious:
+
+1. New requests
+2. Client name
+3. Business
+4. Plan
+5. Date/time
+6. Phone
+7. Full request details
+
+Everything else should be secondary.
+
+==================================================
+25. RESPONSIVE / DEVICE UI
+
+The interface should remain clean on different Android screen sizes.
+
+Do not cram information horizontally.
+
+Long text should wrap properly.
+
+Buttons should not overlap.
+
+Cards should not touch each other unnecessarily.
+
+==================================================
+26. FINAL DESIGN PRINCIPLE
+
+The app should give this feeling:
+
+"Open app → immediately see client requests → tap request → see details → call client."
+
+NOT:
+
+"Open app → see a huge dashboard → many cards → many statistics → many buttons → complicated navigation."
+
+Keep it simple.
+
+==================================================
+27. FINAL DATA PRINCIPLE
+
+The permanent source of client requests is:
+
+FIREBASE / FIRESTORE
+
+NOT:
+
+The phone.
+
+NOT:
+
+The installed app.
+
+NOT:
+
+Local storage.
+
+Therefore:
+
+APP DELETED ≠ FIREBASE DATA DELETED
+
+APP REINSTALLED = EXISTING FIREBASE DATA SHOULD LOAD AGAIN
+
+LOCAL APP DATA CLEARED = FIREBASE DATA SHOULD REMAIN
+
+==================================================
+28. FINAL VERIFICATION
+
+After implementation, verify both:
+
+UI
+
+AND
+
+DATA PERSISTENCE.
+
+UI verification:
+
+- Clean
+- Spacious
+- Minimal
+- No unnecessary options
+- No crowded dashboard
+- Easy request access
+- Easy request details
+- Easy phone calling
+
+Data verification:
+
+- Existing Firebase requests visible
+- New Firebase requests visible
+- Historical requests visible
+- No automatic deletion
+- No duplicate requests
+- App reinstall does not remove data
+- App data clearing does not remove data
+- Same Firebase project is used
+- Existing Firestore documents remain intact
+
+==================================================
+FINAL WARNING
+
+DO NOT ADD FEATURES JUST TO MAKE THE APP LOOK MORE ADVANCED.
+
+DO NOT ADD UNNECESSARY OPTIONS.
+
+DO NOT MAKE THE UI CROWDED.
+
+DO NOT DELETE OR RESET EXISTING FIREBASE DATA.
+
+DO NOT CREATE A NEW EMPTY DATABASE.
+
+DO NOT STORE REQUEST HISTORY ONLY LOCALLY.
+
+KEEP THE APP SIMPLE.
+
+KEEP THE DATA PERMANENT IN FIREBASE.
+
+Only make the changes described above.

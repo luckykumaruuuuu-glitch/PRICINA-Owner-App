@@ -85,6 +85,23 @@ export default function LeadDetailsScreen() {
       <Section title="Message / requirements">
         <Text style={[styles.bodyText, { color: lead.message === 'Not provided' ? colors.mutedForeground : colors.foreground }]}>{lead.message}</Text>
       </Section>
+      {lead.attachments.length ? (
+        <Section title="Attachments">
+          {lead.attachments.map((attachment) => (
+            <Pressable
+              key={attachment}
+              onPress={() => void launch(attachment, 'This attachment cannot be opened on this device.')}
+              style={styles.attachment}
+            >
+              <Feather name="paperclip" size={15} color={colors.primary} />
+              <Text style={[styles.attachmentText, { color: colors.primary }]} numberOfLines={2}>
+                {attachment}
+              </Text>
+              <Feather name="external-link" size={13} color={colors.primary} />
+            </Pressable>
+          ))}
+        </Section>
+      ) : null}
       <Section title="Submission">
         <InfoRow icon="calendar" label="Date" value={formatDate(lead.createdAt)} />
         <InfoRow icon="clock" label="Time" value={formatTime(lead.createdAt)} />
@@ -157,6 +174,8 @@ const styles = StyleSheet.create({
   infoLabel: { fontSize: 11, width: 90 },
   infoValue: { fontSize: 13, fontWeight: '600', flex: 1 },
   bodyText: { fontSize: 14, lineHeight: 21 },
+  attachment: { flexDirection: 'row', alignItems: 'center', gap: 9, minHeight: 30 },
+  attachmentText: { fontSize: 13, flex: 1 },
   updating: { fontSize: 11, marginTop: 1 },
   noDeleteNote: { borderRadius: 14, padding: 13, flexDirection: 'row', gap: 8, alignItems: 'center' },
   noDeleteText: { fontSize: 11, flex: 1, lineHeight: 16 },

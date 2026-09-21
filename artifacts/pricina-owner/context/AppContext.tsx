@@ -41,6 +41,7 @@ export interface Lead {
   businessType: string;
   selectedPlan: string;
   services: string[];
+  attachments: string[];
   message: string;
   createdAt: Timestamp | Date | string | number | null;
   status: LeadStatus;
@@ -124,6 +125,13 @@ const mapLead = (id: string, value: Record<string, unknown>): Lead => ({
     : value.services
       ? [String(value.services)]
       : [],
+  attachments: Array.isArray(value.attachments)
+    ? value.attachments.map((attachment) => String(attachment))
+    : Array.isArray(value.attachmentUrls)
+      ? value.attachmentUrls.map((attachment) => String(attachment))
+      : typeof value.photoUrl === 'string' && value.photoUrl.trim()
+        ? [value.photoUrl.trim()]
+        : [],
   message: stringValue(value.message),
   createdAt: timestampValue(
     value.createdAt ?? value.submittedAt ?? value.submitted_at ?? value.timestamp,
