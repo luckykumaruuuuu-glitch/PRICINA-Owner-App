@@ -7,8 +7,11 @@ import { useColors } from '@/hooks/useColors';
 
 export default function EntryScreen() {
   const colors = useColors();
-  const { user, isLoading } = useApp();
-  if (!isLoading) return <Redirect href={user ? '/(tabs)' : '/login'} />;
+  const { isLoading } = useApp();
+  // The owner app opens directly to the dashboard. Firebase authentication
+  // still gates the Firestore listener inside AppProvider; unauthenticated
+  // sessions see the dashboard error state instead of a login screen.
+  if (!isLoading) return <Redirect href="/(tabs)" />;
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <BrandMark />

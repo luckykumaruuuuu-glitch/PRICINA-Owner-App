@@ -56,6 +56,7 @@ The requested product is private-owner-only, must use the existing Firebase proj
 
 - Do not replace the existing customer website or create a second Firebase project/database.
 - The `users/{uid}` owner document and Firestore rules must be configured in Firebase Console before real owner data can load.
+- The app opens directly to the owner dashboard; Firebase still requires a valid persisted owner session before the `leads` listener can read data.
 - Expo Doctor may report newly published patch versions before the package firewall considers them mature; use the exact compatible patch versions already installed if that happens.
 
 ## Pointers
