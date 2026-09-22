@@ -1,0 +1,70 @@
+Fix the Firebase Authentication initialization in this Expo React Native app.
+
+IMPORTANT:
+
+- Do NOT modify notification permission code.
+- Do NOT modify Firestore logic.
+- Do NOT change the Firebase project/config values.
+- Do NOT change the UI or routing.
+- Do NOT upgrade/downgrade Firebase or Expo.
+- Do NOT add unnecessary packages if they are already installed.
+
+Current problem:
+Android Development Build and Expo Go crash during startup with:
+
+INTERNAL ASSERTION FAILED: Expected a class definition
+
+The crash points to:
+artifacts/pricina-owner/lib/firebase.ts line 54
+
+Current firebase.ts manually creates a custom Persistence object using AsyncStorage:
+
+const asyncStoragePersistence = {
+type: 'LOCAL' as const,
+_isAvailable: async () => true,
+_set: async (...) => {...},
+_get: async (...) => {...},
+_remove: async (...) => {...},
+_addListener: () => undefined,
+_removeListener: () => undefined,
+} as unknown as Persistence;
+
+and then:
+
+initializeAuth(firebaseApp, { persistence: asyncStoragePersistence });
+
+Replace this custom persistence implementation with Firebase's official React Native persistence helper.
+
+Use this pattern:
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import {
+getAuth,
+getReactNativePersistence,
+initializeAuth,
+} from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { Platform } from 'react-native';
+
+Then initialize Auth like this:
+
+export const firebaseAuth =
+Platform.OS === 'web'
+? getAuth(firebaseApp)
+: initializeAuth(firebaseApp, {
+persistence: getReactNativePersistence(AsyncStorage),
+});
+
+Remove the manually created asyncStoragePersistence object and remove the unused Persistence type import.
+
+Keep everything else in firebase.ts unchanged.
+
+Also check the project for any other Firebase Auth initialization that could initialize the same app before firebase.ts. Do not change unrelated code.
+
+After making the change:
+
+1. Verify TypeScript has no errors.
+2. Verify @react-native-async-storage/async-storage is already installed.
+3. Do not modify notification code.
+4. Report exactly which files were changed.
